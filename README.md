@@ -1,48 +1,35 @@
-# Smart India Hackathon 2025 – Rooftop Rainwater Harvesting (RWH) MVP
+# RWH Assessment Backend (FastAPI)
 
-This bundle contains:
-- `backend/` FastAPI service (Postgres-ready, SQLite fallback)
-- `flutter_app/` minimal Flutter client
-- `docs/flowchart.png` architecture flowchart
+## Features (MVP)
+- JWT-based auth (demo-grade)
+- Users, Sites, Assessments
+- Compute harvest potential and recharge feasibility
+- Postgres via SQLAlchemy (falls back to SQLite if DATABASE_URL not set)
+- CORS enabled for Flutter app
 
-## Quick Start
+## Quickstart (Local)
 
-### Backend (API)
-1. Install Python 3.11+
-2. Create virtual env and install deps:
-   ```bash
-   cd backend
-   python -m venv .venv
-   source .venv/bin/activate    # Windows: .venv\Scripts\activate
-   pip install -r requirements.txt
-   cp .env.example .env         # set SECRET_KEY and DATABASE_URL if using Postgres
-   uvicorn app.main:app --reload --port 8000
-   ```
-3. Open docs: http://localhost:8000/docs
-
-### Flutter App
-1. Install Flutter (3.x). In Android emulator, the backend URL `http://10.0.2.2:8000` points to your host.
-2. Run app:
-   ```bash
-   cd flutter_app
-   flutter pub get
-   flutter run
-   ```
-
-### Docker (optional, Postgres included)
+### 1) Python env
 ```bash
 cd backend
-docker compose up --build
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-## Formula
-Harvest Potential (L/year) = Roof Area (sqm) × Avg Rainfall (mm/yr) × Runoff Coefficient
+### 2) Database
+- Default is SQLite for local dev.
+- For Postgres, set DATABASE_URL in `.env` e.g.
+  `DATABASE_URL=postgresql+psycopg2://postgres:postgres@localhost:5432/rwhdb`
 
-Defaults:
-- Concrete 0.85, Tile 0.75, Metal 0.90, Green roof 0.50 (MVP values; tune with field data).
+### 3) Run server
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
 
-## Next Steps
-- Replace demo auth with production-grade (refresh tokens, password reset).
-- Add PDF report endpoint.
-- Add PostGIS and map visualization.
-- Integrate IMD rainfall API and soil datasets.
+API docs at: `http://localhost:8000/docs`
+
+### Docker (optional)
+```bash
+docker compose up --build
+```
